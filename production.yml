@@ -1,0 +1,19 @@
+version: "3.7"
+
+networks:
+    backend:
+        driver: bridge
+
+services:
+    mongo1:
+        image: bitnami/mongodb:4.2.4
+        networks:
+            - backend
+        volumes:
+            - ${dataContainer}/data/mongo1:/bitnami
+            - ${dataContainer}/data/mongo1/init:/docker-entrypoint-initdb.d
+        env_file:
+            - 
+    
+    
+        

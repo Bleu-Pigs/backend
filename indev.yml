@@ -1,0 +1,38 @@
+version: "3.7"
+
+networks:
+    backend:
+        driver: bridge
+
+volumes:
+    psql1:
+        driver: local
+    psqlinit:
+        driver: local
+
+services:
+    # Service Dependencies
+    psql1:
+        image: bitnami/postgresql:12
+        restart: unless-stopped
+        networks:
+            - backend
+        volumes:
+            - ${dataPath}database/psql1:/bitnami
+            - ${dataPath}database/psqlinit:/docker-entrypoint-initdb.d
+        env_file:
+            - ${modulesPath}database/indev.env
+
+    # Development Support Tools
+    pgAdmin:
+        image: dpage/pgadmin4:4
+        depends_on:
+            - psql1
+        networks:
+            - backend
+        ports:
+            - 8081:80
+        env_file:
+            - ${modulesPath}database/indev.env
+
+    # Microservices
